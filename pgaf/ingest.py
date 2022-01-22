@@ -11,7 +11,7 @@ manifest = '/allen/scratch/aindtemp/david.feng/epc/manifest.json'
 cache = EcephysProjectCache(manifest=manifest)
 
 sessions = cache.get_session_table()
-cache.get_probes()
+probes = cache.get_probes()
 cache.get_channels()
 cache.get_units()
 
@@ -28,6 +28,7 @@ sch.Base.metadata.drop_all(engine)
 sch.Base.metadata.create_all(engine)
 
 sessions.drop(columns=['ecephys_structure_acronyms']).to_sql('session', engine, if_exists='append')
+probes.rename(columns={'ecephys_session_id':'session_id'}).drop(columns=['ecephys_structure_acronyms']).to_sql('probe', engine, if_exists='append')
 
 with Session(engine) as session:
     q = select(sch.Session).where(sch.Session.sex == 'M')
