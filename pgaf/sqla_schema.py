@@ -48,7 +48,7 @@ class Session(Base):
     publication_datetime = Column(DateTime)
 
     def __repr__(self):
-        return f'{self.specimen_id} {self.sex} {self.full_genotype} u={self.unit_count} cc={self.channel_count} pc={self.probe_count}'
+        return f'{self.specimen_id} acquired: {self.acquisition_datetime} published: {self.publication_datetime}'
 
 class ProbePhase(Base):
     __tablename__ = 'probe_phase'
