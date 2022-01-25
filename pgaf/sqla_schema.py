@@ -85,7 +85,40 @@ class Channel(Base):
     lfp_sampling_rate = Column(Float)
     sampling_rate = Column(Float)
 
+class Unit(Base):
+    __tablename__ = 'unit'
 
+    id = Column(Integer, primary_key=True)
+
+    session_probe_id = Column(Integer, ForeignKey('session_probe.id'))
+    channel_id = Column(Integer, ForeignKey('channel.id'))
+
+    amplitude_cutoff = Column(Float)
+    cumulative_drift = Column(Float)
+    d_prime = Column(Float)
+    firing_rate = Column(Float)
+    isi_violations = Column(Integer)
+    isolation_distance = Column(Float)
+    L_ratio = Column(Float)
+    max_drift = Column(Float)
+    nn_hit_rate = Column(Float)
+    nn_miss_rate = Column(Float)
+    presence_ratio = Column(Float)
+    silhouette_score = Column(Float)
+    snr = Column(Float)
+    quality = Column(String)
+    waveform_PT_ratio = Column(Float)
+    waveform_amplitude = Column(Float)
+    waveform_duration = Column(Float)
+    waveform_halfwidth = Column(Float)
+    waveform_spread = Column(Float)
+    waveform_velocity_above = Column(Float)
+    waveform_velocity_below = Column(Float)
+    waveform_recovery_slope = Column(Float)
+    waveform_repolarization_slope = Column(Float)
+    
+    
+    
     
                               
     

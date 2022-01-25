@@ -2,8 +2,10 @@ from allensdk.brain_observatory.ecephys.ecephys_project_cache import EcephysProj
 
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
+from sqlalchemy_schemadisplay import create_schema_graph
 
 import json
+import numpy as np
 import pandas as pd
 from datetime import date,datetime,timedelta
 
@@ -15,7 +17,10 @@ cache = EcephysProjectCache(manifest=manifest)
 sessions = cache.get_session_table(suppress=[])
 probes = cache.get_probes()
 channels = cache.get_channels()
-units = cache.get_units()
+units = cache.get_units(filter_by_validity=False,
+                        amplitude_cutoff_maximum = np.inf,
+                        presence_ratio_minimum = -np.inf,
+                        isi_violations_maximum = np.inf)
 
 for idx,row in sessions.head(3).iterrows():
     cache.get_session_data(idx)
@@ -28,6 +33,14 @@ conn_string = f"postgresql://{conn_info['user']}:{conn_info['password']}@{conn_i
 engine = create_engine(conn_string)
 sch.Base.metadata.drop_all(engine)
 sch.Base.metadata.create_all(engine)
+
+graph = create_schema_graph(metadata=sch.Base.metadata,
+                            show_datatypes=False,
+                            show_indexes=False,
+                            rankdir='LR',
+                            concentrate=True)
+graph.write_png('dbschema.png')
+
 
 # preprocess sessions
 sessions['acquisition_datetime'] = sessions['date_of_acquisition'].map(lambda v: datetime.strptime(v, "%Y-%m-%dT%H:%M:%S%z"))
@@ -91,11 +104,14 @@ probes.to_sql('session_probe', engine, if_exists='append')
 channels = channels.rename(columns={'ecephys_probe_id':'session_probe_id','ecephys_structure_id':'structure_id'})
 channels = channels.drop(columns=['phase','ecephys_structure_acronym','unit_count','has_lfp_data','ecephys_session_id'])
 channels.to_sql('channel', engine, index_label='id', if_exists='append')
-print(channels.head())
 
-with Session(engine) as session:
-    q = select(sch.Session).where(sch.Session.sex == 'M')
-    for r in session.execute(q):
-        print(r[0])
-    
-
+# ingest units
+units = units.rename(columns={'ecephys_probe_id':'session_probe_id', 'ecephys_channel_id':'channel_id'})
+units = units.drop(columns=['local_index', 'probe_horizontal_position', 'probe_vertical_position',
+                            'anterior_posterior_ccf_coordinate', 'dorsal_ventral_ccf_coordinate',
+                            'left_right_ccf_coordinate', 'ecephys_structure_id',
+                            'ecephys_structure_acronym', 'ecephys_session_id', 'lfp_sampling_rate',
+                            'name', 'phase', 'sampling_rate', 'has_lfp_data', 'date_of_acquisition',
+                            'published_at', 'specimen_id', 'session_type', 'age_in_days', 'sex',
+                            'genotype'])
+units.to_sql('unit', engine, index_label='id', if_exists='append')
