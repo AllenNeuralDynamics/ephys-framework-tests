@@ -106,8 +106,8 @@ channels = channels.drop(columns=['phase','ecephys_structure_acronym','unit_coun
 channels.to_sql('channel', engine, index_label='id', if_exists='append')
 
 # ingest units
-units = units.rename(columns={'ecephys_probe_id':'session_probe_id', 'ecephys_channel_id':'channel_id'})
-units = units.drop(columns=['local_index', 'probe_horizontal_position', 'probe_vertical_position',
+units = units.rename(columns={'ecephys_channel_id':'channel_id'})
+units = units.drop(columns=['ecephys_probe_id', 'local_index', 'probe_horizontal_position', 'probe_vertical_position',
                             'anterior_posterior_ccf_coordinate', 'dorsal_ventral_ccf_coordinate',
                             'left_right_ccf_coordinate', 'ecephys_structure_id',
                             'ecephys_structure_acronym', 'ecephys_session_id', 'lfp_sampling_rate',

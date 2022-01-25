@@ -90,7 +90,6 @@ class Unit(Base):
 
     id = Column(Integer, primary_key=True)
 
-    session_probe_id = Column(Integer, ForeignKey('session_probe.id'))
     channel_id = Column(Integer, ForeignKey('channel.id'))
 
     amplitude_cutoff = Column(Float)
