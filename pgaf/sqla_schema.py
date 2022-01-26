@@ -1,5 +1,6 @@
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, Boolean, Date
+from sqlalchemy.types import ARRAY
 
 Base = declarative_base()
 
@@ -48,7 +49,7 @@ class Session(Base):
     publication_datetime = Column(DateTime)
 
     def __repr__(self):
-        return f'{self.specimen_id} {self.sex} {self.full_genotype} u={self.unit_count} cc={self.channel_count} pc={self.probe_count}'
+        return f'{self.specimen_id} acquired: {self.acquisition_datetime} published: {self.publication_datetime}'
 
 class ProbePhase(Base):
     __tablename__ = 'probe_phase'
@@ -85,12 +86,18 @@ class Channel(Base):
     lfp_sampling_rate = Column(Float)
     sampling_rate = Column(Float)
 
+class UnitSpikeTimes(Base):
+    __tablename__ = 'unit_spike_times'
+
+    unit_id = Column(Integer, primary_key=True)
+    spike_times = Column(ARRAY(Float))
+    
+
 class Unit(Base):
     __tablename__ = 'unit'
 
     id = Column(Integer, primary_key=True)
 
-    session_probe_id = Column(Integer, ForeignKey('session_probe.id'))
     channel_id = Column(Integer, ForeignKey('channel.id'))
 
     amplitude_cutoff = Column(Float)
@@ -116,6 +123,8 @@ class Unit(Base):
     waveform_velocity_below = Column(Float)
     waveform_recovery_slope = Column(Float)
     waveform_repolarization_slope = Column(Float)
+
+    
     
     
     
