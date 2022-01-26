@@ -1,5 +1,6 @@
 from sqlalchemy.orm import declarative_base
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, Boolean, Date
+from sqlalchemy.types import ARRAY
 
 Base = declarative_base()
 
@@ -85,6 +86,13 @@ class Channel(Base):
     lfp_sampling_rate = Column(Float)
     sampling_rate = Column(Float)
 
+class UnitSpikeTimes(Base):
+    __tablename__ = 'unit_spike_times'
+
+    unit_id = Column(Integer, primary_key=True)
+    spike_times = Column(ARRAY(Float))
+    
+
 class Unit(Base):
     __tablename__ = 'unit'
 
@@ -115,6 +123,8 @@ class Unit(Base):
     waveform_velocity_below = Column(Float)
     waveform_recovery_slope = Column(Float)
     waveform_repolarization_slope = Column(Float)
+
+    
     
     
     
