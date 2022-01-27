@@ -8,7 +8,7 @@ import datajoint as dj
 import pandas as pd
 
 # Establish connection
-dj.config['database.host'] = '10.95.240.3'
+dj.config['database.host'] = '10.95.240.3' # private IP, will not work locally
 dj.config['database.user'] = 'davidf'
 dj.config['database.password'] = 'davidf'
 dj.conn()
