@@ -28,33 +28,30 @@ def ingest_stimulus_types(sessions, engine):
     stim_types = pd.DataFrame(data={'name': stim_table['stimulus_name'].unique()})
     stim_types.to_sql('stimulus_type', engine, index_label='id', if_exists='append')
 
-
-def ingest_session(session, engine):
-    
-    with sessionmaker(engine)() as dbsession:
-        # stimulus types
-        stim_types = pd.read_sql('stimulus_type', engine, index_col='id')
+def ingest_stimulus_presentations(session, engine):
+    # stimulus types
+    stim_types = pd.read_sql('stimulus_type', engine, index_col='id')
         
-        # stimulus presentations
-        stim_table = session.stimulus_presentations
-        stim_table = stim_table.replace({'null':None})
+    # stimulus presentations
+    stim_table = session.stimulus_presentations
+    stim_table = stim_table.replace({'null':None})
 
-        for k in ['phase','size','spatial_frequency']:
-            stim_table[k] = stim_table[k].apply(clean_string)
+    for k in ['phase','size','spatial_frequency']:
+        stim_table[k] = stim_table[k].apply(clean_string)
             
-        stim_table = stim_table.merge(stim_types.reset_index(), left_on='stimulus_name', right_on='name', how='left').rename(columns={'id':'stimulus_type_id'}).drop(columns=['stimulus_name','name'])
-        stim_table['session_id'] = pd.Series([session.ecephys_session_id]*len(stim_table))
-        print("loading presentations")
-        stim_table.to_sql('stimulus_presentation', engine, index=False, if_exists='append')
+    stim_table = stim_table.merge(stim_types.reset_index(), left_on='stimulus_name', right_on='name', how='left').rename(columns={'id':'stimulus_type_id'}).drop(columns=['stimulus_name','name'])
+    stim_table['session_id'] = pd.Series([session.ecephys_session_id]*len(stim_table))
+    stim_table.to_sql('stimulus_presentation', engine, index=False, if_exists='append')
 
+
+def ingest_spike_times(session, engine):
+    with sessionmaker(engine)() as dbsession:
         # spike times
         for unit_id, unit_spike_times in session.spike_times.items():
             dbst = sch.UnitSpikeTimes(unit_id=unit_id, spike_times=unit_spike_times)
             print(unit_id)
             dbsession.add(dbst)
             dbsession.commit()
-
-
 
 def main():
 
@@ -67,16 +64,19 @@ def main():
     cache = ingest.get_ecephys_cache()
 
     print("loading session metadata")
-    sessions = cache.get_session_table(suppress=[]).head(1)
+    sessions = cache.get_session_table(suppress=[]).head(3)
 
     all_session_data = [ cache.get_session_data(idx) for idx, row in sessions.iterrows() ]
 
     print("ingesting stimulus types")
     ingest_stimulus_types(all_session_data, engine)
 
-    print("ingesting sessions")
     for session in all_session_data:
-        ingest_session(session, engine)
+        print("ingesting stim table")
+        ingest_stimulus_presentations(session, engine)
+
+        print("ingesting spike times")
+        ingest_spike_times(session, engine)
 
 
 if __name__ == '__main__': main()
