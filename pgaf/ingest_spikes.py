@@ -12,11 +12,17 @@ import ast
 import sqla_schema as sch
 
 import ingest
+import numbers
 
 def clean_string(v):
     if v is None:
         return None
+
+    if isinstance(v, numbers.Number):
+        return v
+
     v = ast.literal_eval(v.strip())
+
     if isinstance(v, list):
         return v[0]
     return v
