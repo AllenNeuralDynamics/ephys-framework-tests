@@ -123,7 +123,40 @@ class Unit(Base):
     waveform_velocity_below = Column(Float)
     waveform_recovery_slope = Column(Float)
     waveform_repolarization_slope = Column(Float)
-
+    
+    
+class StimulusType(Base):
+    __tablename__ = 'stimulus_type'
+    
+    id = Column(Integer,primary_key = True)
+    
+    stimulus_name = Column(String)
+ 
+    
+class Stimulus(Base):
+    __tablename__ = 'stimulus'
+    
+    id = Column(Integer,primary_key = True)
+    
+    session_id = Column(Integer, ForeignKey('session.id'))
+    color = Column(Boolean)
+    contrast = Column(Float)
+    frame = Column(Integer)
+    orientation = Column(Float)
+    phase = Column(Float)
+    size = Column(Float)
+    spatial_frequency = Column(Float)
+    start_time = Column(Float)
+    stimulus_block = Column(Integer)
+    stimulus_type = Column(Integer, ForeignKey('stimulus_type.id'))
+    stop_time = Column(Float)
+    temporal_frequency = Column(Float)
+    x_position = Column(Float)
+    y_position = Column(Float)
+    duration = Column(Float)
+    stimulus_condition_id = Column(Integer)
+    
+    
     
     
     

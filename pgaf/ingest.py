@@ -21,8 +21,7 @@ def connect_to_db(secrets_file='SECRETS'):
 
     return engine
 
-def get_ecephys_cache():
-    manifest = '/allen/scratch/aindtemp/david.feng/epc/manifest.json'
+def get_ecephys_cache(manifest = '/allen/scratch/aindtemp/david.feng/epc/manifest.json'):
     return EcephysProjectCache(manifest=manifest)
 
 def ingest_core():
