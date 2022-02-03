@@ -10,8 +10,8 @@ from django.contrib.postgres.fields import ArrayField
 
 
 class Channel(models.Model):
-    session_probe = models.ForeignKey('SessionProbe', models.DO_NOTHING, blank=True, null=True)
-    structure = models.ForeignKey('Structure', models.DO_NOTHING, blank=True, null=True)
+    session_probe = models.ForeignKey('SessionProbe', models.CASCADE, blank=True, null=True)
+    structure = models.ForeignKey('Structure', models.CASCADE, blank=True, null=True)
     local_index = models.IntegerField(blank=True, null=True)
     probe_horizontal_position = models.IntegerField(blank=True, null=True)
     probe_vertical_position = models.IntegerField(blank=True, null=True)
@@ -21,71 +21,39 @@ class Channel(models.Model):
     lfp_sampling_rate = models.FloatField(blank=True, null=True)
     sampling_rate = models.FloatField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'channel'
-
 
 class Genotype(models.Model):
-    name = models.CharField(max_length=-1, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'genotype'
-
+    name = models.TextField(blank=True, null=True)
 
 class Mouse(models.Model):
-    sex = models.CharField(max_length=-1, blank=True, null=True)
+    sex = models.TextField(blank=True, null=True)
     date_of_birth = models.DateField(blank=True, null=True)
-    genotype = models.ForeignKey(Genotype, models.DO_NOTHING, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'mouse'
-
+    genotype = models.ForeignKey(Genotype, models.CASCADE, blank=True, null=True)
 
 class ProbePhase(models.Model):
-    name = models.CharField(max_length=-1, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'probe_phase'
-
+    name = models.TextField(blank=True, null=True)
 
 class Session(models.Model):
-    specimen = models.ForeignKey(Mouse, models.DO_NOTHING, blank=True, null=True)
-    session_type = models.ForeignKey('SessionType', models.DO_NOTHING, blank=True, null=True)
+    specimen = models.ForeignKey(Mouse, models.CASCADE, blank=True, null=True)
+    session_type = models.ForeignKey('SessionType', models.CASCADE, blank=True, null=True)
     acquisition_datetime = models.DateTimeField(blank=True, null=True)
     publication_datetime = models.DateTimeField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'session'
-
-
 class SessionProbe(models.Model):
-    session = models.ForeignKey(Session, models.DO_NOTHING, blank=True, null=True)
-    probe_phase = models.ForeignKey(ProbePhase, models.DO_NOTHING, blank=True, null=True)
+    session = models.ForeignKey(Session, models.CASCADE, blank=True, null=True)
+    probe_phase = models.ForeignKey(ProbePhase, models.CASCADE, blank=True, null=True)
     lfp_sampling_rate = models.FloatField(blank=True, null=True)
     sampling_rate = models.FloatField(blank=True, null=True)
-    probe_name = models.CharField(max_length=-1, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'session_probe'
+    probe_name = models.TextField(blank=True, null=True)
 
 
 class SessionType(models.Model):
-    name = models.CharField(max_length=-1, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'session_type'
+    name = models.TextField(blank=True, null=True)
 
 
 class StimulusPresentation(models.Model):
-    stimulus_type = models.ForeignKey('StimulusType', models.DO_NOTHING, blank=True, null=True)
-    session = models.ForeignKey(Session, models.DO_NOTHING, blank=True, null=True)
+    stimulus_type = models.ForeignKey('StimulusType', models.CASCADE, blank=True, null=True)
+    session = models.ForeignKey(Session, models.CASCADE, blank=True, null=True)
     color = models.IntegerField(blank=True, null=True)
     contrast = models.FloatField(blank=True, null=True)
     frame = models.IntegerField(blank=True, null=True)
@@ -102,35 +70,23 @@ class StimulusPresentation(models.Model):
     duration = models.FloatField(blank=True, null=True)
     stimulus_condition_id = models.IntegerField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'stimulus_presentation'
-
 
 class StimulusType(models.Model):
-    name = models.CharField(max_length=-1, blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'stimulus_type'
+    name = models.TextField(blank=True, null=True)
 
 
 class Structure(models.Model):
-    name = models.CharField(max_length=-1, blank=True, null=True)
-    abbreviation = models.CharField(max_length=-1, blank=True, null=True)
-    color_hex_triplet = models.CharField(max_length=-1, blank=True, null=True)
-    structure_id_path = models.CharField(max_length=-1, blank=True, null=True)
+    name = models.TextField(blank=True, null=True)
+    abbreviation = models.TextField(blank=True, null=True)
+    color_hex_triplet = models.TextField(blank=True, null=True)
+    structure_id_path = models.TextField(blank=True, null=True)
     hemisphere_id = models.IntegerField(blank=True, null=True)
     graph_order = models.IntegerField(blank=True, null=True)
     parent_structure_id = models.IntegerField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'structure'
-
 
 class Unit(models.Model):
-    channel = models.ForeignKey(Channel, models.DO_NOTHING, blank=True, null=True)
+    channel = models.ForeignKey(Channel, models.CASCADE, blank=True, null=True)
     amplitude_cutoff = models.FloatField(blank=True, null=True)
     cumulative_drift = models.FloatField(blank=True, null=True)
     d_prime = models.FloatField(blank=True, null=True)
@@ -144,7 +100,7 @@ class Unit(models.Model):
     presence_ratio = models.FloatField(blank=True, null=True)
     silhouette_score = models.FloatField(blank=True, null=True)
     snr = models.FloatField(blank=True, null=True)
-    quality = models.CharField(max_length=-1, blank=True, null=True)
+    quality = models.TextField(blank=True, null=True)
     waveform_pt_ratio = models.FloatField(db_column='waveform_PT_ratio', blank=True, null=True)  # Field name made lowercase.
     waveform_amplitude = models.FloatField(blank=True, null=True)
     waveform_duration = models.FloatField(blank=True, null=True)
@@ -155,15 +111,8 @@ class Unit(models.Model):
     waveform_recovery_slope = models.FloatField(blank=True, null=True)
     waveform_repolarization_slope = models.FloatField(blank=True, null=True)
 
-    class Meta:
-        managed = False
-        db_table = 'unit'
-
 
 class UnitSpikeTimes(models.Model):
     unit_id = models.AutoField(primary_key=True)
     spike_times = ArrayField(models.FloatField())
 
-    class Meta:
-        managed = False
-        db_table = 'unit_spike_times'
