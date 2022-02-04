@@ -118,3 +118,9 @@ class UnitSpikeTimes(models.Model):
     unit = models.ForeignKey(Unit, models.CASCADE, blank=True, null=True)
     spike_times = ArrayField(models.FloatField())
 
+class TrialSpikeCounts(models.Model):
+    stimulus = models.ForeignKey(StimulusPresentation, models.CASCADE, blank=True, null=True)
+    unit = models.ForeignKey(Unit, models.CASCADE, blank=True, null=True)
+    spike_count = models.IntegerField(blank=True, null=True)
+    spike_rate = models.FloatField(blank=True, null=True)
+
