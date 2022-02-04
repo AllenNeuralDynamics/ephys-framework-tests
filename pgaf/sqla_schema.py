@@ -157,6 +157,14 @@ class StimulusPresentation(Base):
 
 class TrialSpikeCount(Base):
     __tablename__ = 'trial_spike_count'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
 
-    unit_id = Column(Integer, primary_key=True)
+    unit_id = Column(Integer,ForeignKey("unit_spike_times.unit_id"))
+    spike_count = Column(Integer)
+    spike_rate = Column(Float)
+    
+    
+    
+    
     
