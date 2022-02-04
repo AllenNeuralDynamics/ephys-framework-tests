@@ -46,7 +46,7 @@ def ingest_stimulus_presentations(session):
 
     stim_table = stim_table.reset_index()
     stim_table = stim_table.merge(stim_types.reset_index(), left_on='stimulus_name', right_on='name', how='left')
-    stim_table = stim_table.rename(columns={'id':'stimulus_type_id','stimulus_presentation_id':'id'}).drop(columns=['stimulus_name','name','index'])
+    stim_table = stim_table.rename(columns={'id':'stimulus_type_id'}).drop(columns=['stimulus_name','name','index'])
     stim_table['session_id'] = pd.Series([session.ecephys_session_id]*len(stim_table))
     stim_table = stim_table.fillna(np.nan).replace({np.nan:None})
 

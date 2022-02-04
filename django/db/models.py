@@ -54,6 +54,7 @@ class SessionType(models.Model):
 class StimulusPresentation(models.Model):
     stimulus_type = models.ForeignKey('StimulusType', models.CASCADE, blank=True, null=True)
     session = models.ForeignKey(Session, models.CASCADE, blank=True, null=True)
+
     color = models.IntegerField(blank=True, null=True)
     contrast = models.FloatField(blank=True, null=True)
     frame = models.IntegerField(blank=True, null=True)
@@ -68,6 +69,7 @@ class StimulusPresentation(models.Model):
     x_position = models.FloatField(blank=True, null=True)
     y_position = models.FloatField(blank=True, null=True)
     duration = models.FloatField(blank=True, null=True)
+    stimulus_presentation_id = models.IntegerField(blank=True, null=True)
     stimulus_condition_id = models.IntegerField(blank=True, null=True)
 
 
@@ -113,6 +115,6 @@ class Unit(models.Model):
 
 
 class UnitSpikeTimes(models.Model):
-    unit_id = models.AutoField(primary_key=True)
+    unit = models.ForeignKey(Unit, models.CASCADE, blank=True, null=True)
     spike_times = ArrayField(models.FloatField())
 
