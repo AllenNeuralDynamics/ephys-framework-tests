@@ -123,49 +123,48 @@ class Unit(Base):
     waveform_velocity_below = Column(Float)
     waveform_recovery_slope = Column(Float)
     waveform_repolarization_slope = Column(Float)
-    
-    
+
 class StimulusType(Base):
     __tablename__ = 'stimulus_type'
-    
-    id = Column(Integer,primary_key = True)
-    
-    stimulus_name = Column(String)
- 
-    
-class Stimulus(Base):
-    __tablename__ = 'stimulus'
-    
-    id = Column(Integer,primary_key = True)
-    
-    session_id = Column(Integer, ForeignKey('session.id'))
-    color = Column(Boolean)
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+
+class StimulusPresentation(Base):
+    __tablename__ = 'stimulus_presentation'
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+
+    stimulus_type_id = Column(Integer, ForeignKey("stimulus_type.id"))
+    session_id = Column(Integer, ForeignKey("session.id"))
+
+    color = Column(Integer)
     contrast = Column(Float)
     frame = Column(Integer)
-    orientation = Column(Float)
+    orientation = Column(Integer)
     phase = Column(Float)
     size = Column(Float)
     spatial_frequency = Column(Float)
-    start_time = Column(Float)
     stimulus_block = Column(Integer)
-    stimulus_type = Column(Integer, ForeignKey('stimulus_type.id'))
+    start_time = Column(Float)
     stop_time = Column(Float)
     temporal_frequency = Column(Float)
     x_position = Column(Float)
     y_position = Column(Float)
     duration = Column(Float)
     stimulus_condition_id = Column(Integer)
+
+
+class TrialSpikeCount(Base):
+    __tablename__ = 'trial_spike_count'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    stimulus_id = Column(Integer,ForeignKey("stimulus_presentation.id"))
+    unit_id = Column(Integer,ForeignKey("unit_spike_times.unit_id"))
+    spike_count = Column(Integer)
+    spike_rate = Column(Float)
     
     
     
     
-    
-    
-    
-                              
-    
-    
-                   
-                
-            
     
