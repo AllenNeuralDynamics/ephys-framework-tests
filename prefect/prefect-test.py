@@ -14,13 +14,19 @@ def task_2(x):
 def task_3(x):
     return x
 
+@task 
+def task_4(x):
+    return sum(x)
+
 storage = GCS('prefect-artifacts', stored_as_script=True)
 run_config = VertexRun(image='prefecthq/prefect:latest')
 
 with Flow('vertex-test', storage=storage, run_config=run_config) as flow:
 
     p = Parameter('x', default=1)
-    
+
+    o = []
+
     for i in range(5):
         vi = task_1(p)
 
@@ -29,5 +35,11 @@ with Flow('vertex-test', storage=storage, run_config=run_config) as flow:
 
             for k in range(5):
                 vk = task_3(vj)
+
+                o.append(vk)
+
+    result = task_4(o)
+
+    
 
             
