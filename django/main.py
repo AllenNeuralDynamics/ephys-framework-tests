@@ -5,7 +5,7 @@ connect()
 import numpy as np
 from db.models import *
 from django_pandas.io import read_frame
-from django.db.models import Count
+from django.db.models import Count, TextField
 from django.contrib.postgres.aggregates import StringAgg
 
 # query for sessions by session_type
@@ -28,7 +28,7 @@ id
 # same, but resolve joins and just get columns of interest, also uses slice notation to limit to first five entries
 qs = Session.objects.annotate(
     probe_count=Count('sessionprobe',distinct=True),
-    structures=StringAgg('sessionprobe__channel__structure__abbreviation', distinct=True, delimiter=',')
+    structures=StringAgg('sessionprobe__channel__structure__abbreviation', distinct=True, delimiter=',', output_field=TextField())
 )[:5].values(
     'id',
     'publication_datetime',
