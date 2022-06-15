@@ -8,8 +8,11 @@ job_kwargs = dict(n_jobs=40, chunk_duration="1s", progress_bar=True)
 
 
 # define some preprocessing params
-# TODO: Josh is fixing the phase_shift (let's skip it for now)
 # IMO, we should have a 1-to-1 correspondence between SI functions and their kwargs
+
+# TODO Josh is fixing the phase_shift (let's skip it for now)
+# TODO we have now several motion-correction algos that can be applied here for drift removal
+# (more computationally expensive at the moment)
 preprocessing_params = dict(
     "bandpass_filter": dict(freq_min=300.0,
                             freq_max=6000.0,
