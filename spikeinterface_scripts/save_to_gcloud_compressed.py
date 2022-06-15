@@ -1,5 +1,6 @@
 from pathlib import Path
-import spikeinterface.full as si
+import spikeinterface as si
+import spikeinterface.extractors as se
 import neo
 import numpy as np
 import time
@@ -20,7 +21,7 @@ session = "595262_2022-02-21_15-18-07"
 oe_folder = data_base_folder / session
 
 # base gcloud bucket
-bucket = "gcs: // aind-transfer-service-test/zarr-test-folder"
+bucket = "gcs://aind-transfer-service-test/zarr-test-folder"
 
 # we have to first access the different streams (i.e., different probes)
 io = neo.rawio.OpenEphysBinaryRawIO(oe_folder)
@@ -29,7 +30,7 @@ streams = io.header['signal_streams']
 
 # now we can save one file per stream
 for stream_name, stream_id in streams:
-    rec_oe = si.read_openephys(oe_folder, stream_id=stream_id)
+    rec_oe = se.read_openephys(oe_folder, stream_id=stream_id)
     print(rec_oe)
     print(rec_oe.get_probe())
 

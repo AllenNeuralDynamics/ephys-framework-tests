@@ -14,11 +14,11 @@ job_kwargs = dict(n_jobs=40, chunk_duration="1s", progress_bar=True)
 # TODO we have now several motion-correction algos that can be applied here for drift removal
 # (more computationally expensive at the moment)
 preprocessing_params = dict(
-    "bandpass_filter": dict(freq_min=300.0,
-                            freq_max=6000.0,
-                            margin_ms=5.0),
-    "common_reference": dict(reference='global',
-                             operator='median'),
+    bandpass_filter=dict(freq_min=300.0,
+                         freq_max=6000.0,
+                         margin_ms=5.0),
+    common_reference=dict(reference='global',
+                          operator='median'),
 )
 
 
