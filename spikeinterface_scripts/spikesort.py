@@ -15,7 +15,7 @@ recording_preprocessed = si.load_extractor(preprocessed_folder)
 
 # run spike sorting 
 # NOTE: we don't use the docker/singularity mechanism here because the sorter is installed "locally"
-sorting = ss.run_sorter(sorter_name=sorter_params=, recording=recording_preprocessed,
+sorting = ss.run_sorter(sorter_name=sorter_name, recording=recording_preprocessed,
                         output_folder="some_output", delete_output_folder=True,
                         **sorter_params)
 
