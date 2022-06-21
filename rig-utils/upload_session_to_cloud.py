@@ -24,10 +24,10 @@ data_base_folder = Path("/home/alessio/Documents/data/allen/npix-open-ephys")
 session = "595262_2022-02-21_15-18-07"
 
 # this assumes you have a GOOGLE_APPLICATION_CREDENTIALS env
-gcloud_cred = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", None)
-if gcloud_cred:
+gcloud_token = os.getenv("GOOGLE_APPLICATION_CREDENTIALS", None)
+if gcloud_token:
     # TODO fix download request 
-    token = None
+    token = gcloud_token
     storage_options={"token": token}
 else:
     raise Exception("No credentials found!")
@@ -76,4 +76,6 @@ bucket_dst = f"{bucket}/{session}/open-ephys"
 cmd = f"gsutil rsync -r -x \".*\.dat$\" {local_src} {bucket_dst}"
 os.system(cmd)
 
-# Upload videos and meta in the same way
+# TODO: Upload videos in f"{bucket}/{session}/behavior"
+
+# TODO: Upload metadata.json/yaml in f"{bucket}/{session}/"
