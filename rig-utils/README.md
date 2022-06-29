@@ -26,9 +26,9 @@ This guide explains how to set up a Windows workstation to:
 
 ## Install docker (needed for spike sorting)
 
-- First, make sure virtualization is enabled (might require to change options in the BIOS), see [].
+- First, make sure virtualization is enabled (might require to change options in the BIOS), see [this guide](https://mashtips.com/enable-virtualization-windows-10/).
 
-- Install WSL (Windows Subsystem for Linux) - [iinstructions](https://docs.microsoft.com/en-us/windows/wsl/install). When done, **Restart** and launch **Ubuntu** app to choose a username and password for the Linux subsystem.
+- Install WSL (Windows Subsystem for Linux) - [instructions](https://docs.microsoft.com/en-us/windows/wsl/install). When done, **Restart** and launch **Ubuntu** app to choose a username and password for the Linux subsystem.
 
 - Download and install [Docker Desktop](https://www.docker.com/products/docker-desktop/) and follow the installation instructions. When done, logout and login again. Note that you need a [dockerhub](https://hub.docker.com/) account and to sign in to be able to pull images are run spike sorting in Docker.
 
@@ -63,3 +63,5 @@ python C:/Users/<your-user-name>/Anaconda3/envs/si/Scripts/pywin32_postinstall.p
 pip install -U crcmod
 ```
 
+Make an environment variable called `SPIKEINTERFACE_DEV_PATH` that points to the cloned SpikeInterface repo (this is
+temporary and needed to propagate the right SI version to the docker image -- won't be required after the next release).
