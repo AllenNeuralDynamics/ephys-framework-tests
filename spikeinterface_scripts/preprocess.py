@@ -1,10 +1,25 @@
 import spikeinterface as si
-import spikeinterface.toolkit as st
-from spikeinterface.toolkit import preprocessing
+from spikeinterface.preprocessing import bandpass_filter, phase_shift, common_reference
 
-# instance dependent (especcially n_jobs)
+####################################### IMAGE ###############################################
+#
+# - base-spikeinterface-image
+#
+##############################################################################################
+
+
+####################################### INPUTS ###############################################
+#
+# - a .zarr folder mounted on the instance
+# - or direct streaming from the bucket (we need to test parallel access in this case)
+#
+##############################################################################################
+
+instance_params = dict(n_cpus=40, total_ram="128G")
+
+# instance dependent (especially n_jobs)
 # for many jobs, it's better to keep chunk duration quite small
-job_kwargs = dict(n_jobs=40, chunk_duration="1s", progress_bar=True)
+job_kwargs = dict(n_jobs=instance_params["n_cpus"], chunk_duration="1s", progress_bar=True)
 
 
 # define some preprocessing params
@@ -17,6 +32,7 @@ preprocessing_params = dict(
     bandpass_filter=dict(freq_min=300.0,
                          freq_max=6000.0,
                          margin_ms=5.0),
+    phase_shift=dict(margin_ms=500.),
     common_reference=dict(reference='global',
                           operator='median'),
 )
@@ -37,14 +53,26 @@ zarr_path_gcloud = "gcs://aind-transfer-service-test/zarr-test-folder/595262_202
 # read recording
 recording = si.read_zarr("path-to-zarr.zarr")
 
+
+# do actual preprocessing
 recording_preprocessed = si.bandpass_filter(recording, 
                                             **preprocessing_params["bandpass_filter"])
+
+# with the next release the inter-sample shifts should be automatically loaded. We can skip this for now
+recording_preprocessed = si.phase_shift(recording_preprocessed,
+                                        **preprocessing_params["phase_shift"])
 
 recording_preprocessed = si.common_reference(recording, 
                                              **preprocessing_params["common_reference"])
 
-# save in the output folder (for CodeOcean) or into a bucket
-# note that also the preprocessed data could be compressed
+
+# save preprocessed data (note that also the preprocessed data could be compressed)
 rec_saved = recording_preprocessed.save(folder="output/preprocessed",
                                         **job_kwargs)
 # done preprocessing node
+
+####################################### OUTPUTS ###############################################
+#
+# - "output/preprocessed" folder (self contained, can be loaded by another node)
+#
+##############################################################################################

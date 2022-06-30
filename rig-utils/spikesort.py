@@ -66,7 +66,7 @@ for stream_name, stream_id in streams:
     print(f"{sorter_name} output on {session}-{stream_name}: {sorting}")
     
     # save output
-    sorting_saved = sorting.save(folder=local_output_folder / f"{sorter_name}_{stream_name}}")
+    sorting_saved = sorting.save(folder=local_output_folder / f"{sorter_name}_{stream_name}")
     
 
 # Call gsutil to copy the Open-Ephys folder except .dat files
