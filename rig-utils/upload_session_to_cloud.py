@@ -7,7 +7,6 @@ import numpy as np
 import time
 import sys
 import os
-from cloudfiles import CloudFiles
 
 from numcodecs import Blosc
 
@@ -91,11 +90,7 @@ for stream_name, stream_id in streams:
     xRT = rec_oe.get_total_duration() / elapsed_time
     print(f"Stream '{stream_name}':\n\tcompression speed: {xRT} real-time\n\tcompression ratio: {cr}")
     zarr_paths.apprnd(zarr_path)
-    
 
-# use cloudfiles
-# do we have to loop and find all files and place them at the right point?
-# cf = CloudFiles(gcs_path, progress=True)
 
 # Call gsutil to copy the zarr-folders folder except .dat files
 bucket_dst = f"{bucket}/{session}/compressed"
