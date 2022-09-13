@@ -8,6 +8,7 @@ import sys
 import os
 
 from numcodecs import Blosc
+from wavpack_numcodecs import WavPack
 
 si_scripts_folder = Path(__file__).parent.parent / "spikeinterface_scripts"
 sys.path.append(str(si_scripts_folder))
@@ -40,8 +41,12 @@ else:
 
 
 # define compression options
-compressor = Blosc(cname="zstd", clevel=9, shuffle=Blosc.BITSHUFFLE)
-print(f"Compressor: {compressor}")
+compressor_blosczstd = Blosc(cname="zstd", clevel=9, shuffle=Blosc.BITSHUFFLE)
+compressor_wavpack = WavPack(level=3)
+print(f"Compressor blosc: {compressor_blosczstd}")
+print(f"Compressor WavPack: {compressor_wavpack}")
+
+compressor = compressor_wavpack
 
 chunk_duration = "1s"
 n_jobs = 20
